@@ -8,14 +8,34 @@ interface TimerObject {
     element: React.ReactNode;
 }
 
+class TimerComponent {
+    id: number;
+    element: React.ReactNode;
+
+    constructor(id: number, onRemove: () => void) {
+        this.id = id;
+        this.element = <Timer key={id} onRemove={onRemove} />;
+    }
+}
+
+class AlarmComponent {
+    id: number;
+    element: React.ReactNode;
+
+    constructor(id: number, onRemove: () => void) {
+        this.id = id;
+        this.element = <Alarm key={id} onRemove={onRemove} />;
+    }
+}
+
 const TimersList: React.FC = () => {
-    const [timers, setTimers] = useState<TimerObject[]>([{ id: 0, element: <Timer key={0} onRemove={() => removeTimer(0)} /> }]);
+    const [timers, setTimers] = useState<TimerObject[]>([new TimerComponent(0, () => removeTimer(0))]);
 
     const addTimer = () => {
         const newTimerId = timers.length;
         setTimers((prevTimers) => [
             ...prevTimers,
-            { id: newTimerId, element: <Timer key={newTimerId} onRemove={() => removeTimer(newTimerId)} /> },
+            new TimerComponent(newTimerId, () => removeTimer(newTimerId)),
         ]);
     };
 
@@ -23,7 +43,7 @@ const TimersList: React.FC = () => {
         const newTimerId = timers.length;
         setTimers((prevTimers) => [
             ...prevTimers,
-            { id: newTimerId, element: <Alarm key={newTimerId} onRemove={() => removeTimer(newTimerId)} /> },
+            new AlarmComponent(newTimerId, () => removeTimer(newTimerId)),
         ]);
     };
 
